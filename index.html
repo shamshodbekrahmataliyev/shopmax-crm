@@ -1,274 +1,353 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ShopMax CRM - Do'kon Boshqaruvi</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-  <style>[v-cloak]{display:none}.sidebar-item:hover{background:rgba(255,255,255,0.1)}.sidebar-item.active{background:rgba(255,255,255,0.2)}</style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ShopMax – Do'kon Boshqaruv CRM</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
+body{background:#f1f5f9;display:flex;height:100vh;overflow:hidden}
+#sidebar{width:240px;background:#7c1d29;color:#fff;display:flex;flex-direction:column;flex-shrink:0}
+#sidebar .logo{padding:20px;border-bottom:1px solid rgba(255,255,255,.15)}
+#sidebar .logo h1{font-size:22px;font-weight:700}
+#sidebar .logo p{font-size:12px;color:#fca5a5;margin-top:4px}
+#sidebar nav{flex:1;padding:12px}
+#sidebar nav button{display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px;border:none;background:transparent;color:#fff;cursor:pointer;border-radius:10px;font-size:14px;text-align:left;transition:.2s;margin-bottom:2px}
+#sidebar nav button:hover{background:rgba(255,255,255,.12)}
+#sidebar nav button.active{background:rgba(255,255,255,.22);font-weight:600}
+#sidebar .stats{padding:14px;border-top:1px solid rgba(255,255,255,.15);font-size:12px;color:#fca5a5;line-height:1.8}
+#sidebar .stats strong{color:#fff}
+#main{flex:1;overflow-y:auto}
+.page{display:none;padding:24px}.page.active{display:block}
+h2.pt{font-size:22px;font-weight:700;color:#1e293b;margin-bottom:20px}
+.ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.ph h2{margin-bottom:0}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;margin-bottom:24px}
+.card{background:#fff;border-radius:16px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.08);border-left:4px solid #3b82f6}
+.card.g{border-color:#22c55e}.card.p{border-color:#a855f7}.card.o{border-color:#f97316}.card.r{border-color:#ef4444}
+.card .v{font-size:28px;font-weight:700;color:#1e293b}.card .l{font-size:13px;color:#64748b;margin-top:4px}
+.tbl{background:#fff;border-radius:16px;box-shadow:0 1px 4px rgba(0,0,0,.08);overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead th{background:#f8fafc;padding:12px 16px;text-align:left;font-size:13px;color:#64748b;font-weight:600}
+tbody td{padding:11px 16px;border-top:1px solid #f1f5f9;font-size:14px}
+tbody tr:hover{background:#f8fafc}
+.badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600}
+.bg{background:#dcfce7;color:#16a34a}.br{background:#fee2e2;color:#dc2626}.bb{background:#dbeafe;color:#1d4ed8}.by{background:#fef9c3;color:#a16207}
+.btn{padding:9px 20px;border:none;border-radius:12px;cursor:pointer;font-size:14px;font-weight:600;transition:.2s}
+.bp{background:#7c1d29;color:#fff}.bp:hover{background:#9f1239}
+.bg2{background:#16a34a;color:#fff}.bg2:hover{background:#15803d}
+.br2{background:#ef4444;color:#fff}.br2:hover{background:#dc2626}
+.bgray{background:#e2e8f0;color:#475569}.bgray:hover{background:#cbd5e1}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:20px;padding:28px;width:460px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal h3{font-size:18px;font-weight:700;margin-bottom:18px;color:#1e293b}
+.mf{display:flex;gap:10px;margin-top:20px}.mf button{flex:1}
+.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.fg label{font-size:13px;font-weight:600;color:#475569}
+input,select{padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:14px;outline:none;transition:.2s;width:100%}
+input:focus,select:focus{border-color:#7c1d29;box-shadow:0 0 0 3px rgba(124,29,41,.12)}
+.fr{display:flex;gap:12px}.fr .fg{flex:1}
+#toast{position:fixed;bottom:24px;right:24px;background:#7c1d29;color:#fff;padding:14px 22px;border-radius:14px;font-size:14px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateY(100px);opacity:0;transition:.3s;z-index:9999}
+#toast.show{transform:translateY(0);opacity:1}
+/* POS */
+.pos-wrap{display:grid;grid-template-columns:1fr 380px;gap:20px}
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.prod-btn{background:#fff;border:1.5px solid #e2e8f0;border-radius:14px;padding:14px;cursor:pointer;text-align:left;transition:.2s}
+.prod-btn:hover{border-color:#7c1d29;background:#fff7f7}
+.prod-btn .pn{font-size:14px;font-weight:700;color:#1e293b;margin-bottom:4px}
+.prod-btn .pp{font-size:13px;color:#7c1d29;font-weight:600}
+.prod-btn .ps{font-size:11px;color:#94a3b8}
+.cart-box{background:#fff;border-radius:16px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.08);position:sticky;top:0;max-height:calc(100vh - 48px);overflow-y:auto}
+.cart-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f1f5f9}
+.cart-item .ci-name{font-size:14px;font-weight:600;color:#1e293b}
+.cart-item .ci-price{font-size:13px;color:#64748b}
+.qty-ctrl{display:flex;align-items:center;gap:6px}
+.qty-ctrl button{width:28px;height:28px;border:none;border-radius:8px;background:#f1f5f9;cursor:pointer;font-size:16px;font-weight:700}
+.qty-ctrl span{width:28px;text-align:center;font-weight:700}
+@media print{#sidebar,button,.ph{display:none!important}body{display:block}.page.active{display:block;padding:0}}
+</style>
 </head>
-<body class="bg-gray-100 font-sans" v-cloak>
-<div id="app">
-  <div class="flex h-screen overflow-hidden">
-    <!-- Sidebar -->
-    <div class="w-64 bg-rose-800 text-white flex flex-col shrink-0">
-      <div class="p-5 border-b border-rose-700">
-        <h1 class="text-2xl font-bold">🛒 ShopMax</h1>
-        <p class="text-rose-300 text-sm mt-1">Do'kon boshqaruv tizimi</p>
-      </div>
-      <nav class="flex-1 p-4 space-y-1">
-        <button v-for="item in menu" :key="item.id" @click="page=item.id"
-          :class="['sidebar-item w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition', page===item.id?'active font-semibold':'']">
-          <span class="text-xl">{{item.icon}}</span> {{item.label}}
-        </button>
-      </nav>
-      <div class="p-4 border-t border-rose-700 text-rose-300 text-sm">
-        Mahsulotlar: <strong class="text-white">{{products.length}}</strong><br>
-        Bugungi sotuv: <strong class="text-white">{{todaySales.toLocaleString()}} so'm</strong>
-      </div>
-    </div>
+<body>
+<div id="sidebar">
+  <div class="logo"><h1>🛒 ShopMax</h1><p>Do'kon boshqaruv tizimi</p></div>
+  <nav id="snav"></nav>
+  <div class="stats" id="sstat"></div>
+</div>
+<div id="main">
 
-    <!-- Main -->
-    <div class="flex-1 overflow-auto">
-
-      <!-- Dashboard -->
-      <div v-if="page==='dashboard'" class="p-6">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6">📊 Dashboard</h2>
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <div class="bg-white rounded-2xl p-5 shadow-sm border-l-4 border-rose-500">
-            <div class="text-3xl font-bold text-rose-600">{{products.length}}</div>
-            <div class="text-gray-500 mt-1">Mahsulotlar</div>
-          </div>
-          <div class="bg-white rounded-2xl p-5 shadow-sm border-l-4 border-blue-500">
-            <div class="text-3xl font-bold text-blue-600">{{customers.length}}</div>
-            <div class="text-gray-500 mt-1">Mijozlar</div>
-          </div>
-          <div class="bg-white rounded-2xl p-5 shadow-sm border-l-4 border-green-500">
-            <div class="text-3xl font-bold text-green-600">{{sales.length}}</div>
-            <div class="text-gray-500 mt-1">Sotuvlar</div>
-          </div>
-          <div class="bg-white rounded-2xl p-5 shadow-sm border-l-4 border-yellow-500">
-            <div class="text-3xl font-bold text-yellow-600">{{totalRevenue.toLocaleString()}}</div>
-            <div class="text-gray-500 mt-1">Jami daromad</div>
-          </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="bg-white rounded-2xl p-5 shadow-sm">
-            <h3 class="font-bold text-gray-700 mb-4">So'nggi sotuvlar</h3>
-            <div v-for="s in sales.slice(-5).reverse()" :key="s.id" class="flex justify-between items-center py-2 border-b last:border-0">
-              <div><div class="font-medium text-sm">{{s.productName}}</div><div class="text-xs text-gray-400">{{s.date}}</div></div>
-              <span class="text-green-600 font-semibold">{{s.total.toLocaleString()}} so'm</span>
-            </div>
-            <div v-if="sales.length===0" class="text-gray-400 text-center py-4">Sotuv yo'q</div>
-          </div>
-          <div class="bg-white rounded-2xl p-5 shadow-sm">
-            <h3 class="font-bold text-gray-700 mb-4">⚠️ Kam qoldiq</h3>
-            <div v-for="p in lowStock" :key="p.id" class="flex justify-between items-center py-2 border-b last:border-0">
-              <span class="font-medium text-sm">{{p.name}}</span>
-              <span class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs">{{p.stock}} dona</span>
-            </div>
-            <div v-if="lowStock.length===0" class="text-gray-400 text-center py-4">Barcha mahsulot yetarli 👍</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Mahsulotlar -->
-      <div v-if="page==='products'" class="p-6">
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-2xl font-bold text-gray-800">📦 Mahsulotlar</h2>
-          <button @click="showAddProduct=true" class="bg-rose-600 text-white px-5 py-2 rounded-xl hover:bg-rose-700 transition">+ Qo'shish</button>
-        </div>
-        <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-          <table class="w-full">
-            <thead class="bg-gray-50 text-gray-600 text-sm">
-              <tr><th class="text-left px-5 py-3">Nomi</th><th class="text-left px-5 py-3">Kategoriya</th><th class="text-left px-5 py-3">Narxi</th><th class="text-left px-5 py-3">Qoldiq</th><th class="text-left px-5 py-3">Amal</th></tr>
-            </thead>
-            <tbody>
-              <tr v-for="p in products" :key="p.id" class="border-t hover:bg-gray-50">
-                <td class="px-5 py-3 font-medium">{{p.name}}</td>
-                <td class="px-5 py-3 text-gray-500">{{p.category}}</td>
-                <td class="px-5 py-3">{{p.price.toLocaleString()}} so'm</td>
-                <td class="px-5 py-3"><span :class="p.stock<=5?'bg-red-100 text-red-700':'bg-green-100 text-green-700'" class="px-2 py-1 rounded-full text-sm">{{p.stock}}</span></td>
-                <td class="px-5 py-3"><button @click="deleteProduct(p.id)" class="text-red-500 text-sm">O'chirish</button></td>
-              </tr>
-              <tr v-if="products.length===0"><td colspan="5" class="text-center py-10 text-gray-400">Mahsulot yo'q</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Kassir (POS) -->
-      <div v-if="page==='pos'" class="p-6">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6">🧾 Kassir</h2>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div class="bg-white rounded-2xl p-5 shadow-sm">
-            <h3 class="font-bold mb-4">Mahsulot tanlash</h3>
-            <div class="grid grid-cols-2 gap-3">
-              <button v-for="p in products" :key="p.id" @click="addToCart(p)"
-                class="border rounded-xl p-3 text-left hover:border-rose-400 hover:bg-rose-50 transition">
-                <div class="font-medium text-sm">{{p.name}}</div>
-                <div class="text-rose-600 text-sm mt-1">{{p.price.toLocaleString()}} so'm</div>
-                <div class="text-gray-400 text-xs">Qoldiq: {{p.stock}}</div>
-              </button>
-            </div>
-            <div v-if="products.length===0" class="text-center py-8 text-gray-400">Mahsulot yo'q. Avval mahsulot qo'shing.</div>
-          </div>
-          <div class="bg-white rounded-2xl p-5 shadow-sm">
-            <h3 class="font-bold mb-4">Savat 🛒</h3>
-            <div v-for="(item,i) in cart" :key="i" class="flex items-center justify-between py-2 border-b">
-              <span class="text-sm font-medium">{{item.name}}</span>
-              <div class="flex items-center gap-2">
-                <button @click="item.qty>1?item.qty--:cart.splice(i,1)" class="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200">-</button>
-                <span class="w-6 text-center">{{item.qty}}</span>
-                <button @click="item.qty++" class="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200">+</button>
-                <span class="w-24 text-right text-sm font-semibold">{{(item.price*item.qty).toLocaleString()}}</span>
-              </div>
-            </div>
-            <div v-if="cart.length===0" class="text-center py-8 text-gray-400">Savat bo'sh</div>
-            <div v-if="cart.length>0" class="mt-4 pt-4 border-t">
-              <div class="flex justify-between font-bold text-lg mb-4">
-                <span>Jami:</span><span class="text-rose-600">{{cartTotal.toLocaleString()}} so'm</span>
-              </div>
-              <button @click="checkout" class="w-full bg-rose-600 text-white py-3 rounded-xl hover:bg-rose-700 transition font-semibold">✅ To'lov qilish</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Mijozlar -->
-      <div v-if="page==='customers'" class="p-6">
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-2xl font-bold text-gray-800">👥 Mijozlar</h2>
-          <button @click="showAddCustomer=true" class="bg-blue-600 text-white px-5 py-2 rounded-xl hover:bg-blue-700 transition">+ Qo'shish</button>
-        </div>
-        <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-          <table class="w-full">
-            <thead class="bg-gray-50 text-gray-600 text-sm">
-              <tr><th class="text-left px-5 py-3">Ism</th><th class="text-left px-5 py-3">Telefon</th><th class="text-left px-5 py-3">Manzil</th><th class="text-left px-5 py-3">Amal</th></tr>
-            </thead>
-            <tbody>
-              <tr v-for="c in customers" :key="c.id" class="border-t hover:bg-gray-50">
-                <td class="px-5 py-3 font-medium">{{c.name}}</td>
-                <td class="px-5 py-3 text-gray-500">{{c.phone}}</td>
-                <td class="px-5 py-3 text-gray-500">{{c.address}}</td>
-                <td class="px-5 py-3"><button @click="deleteCustomer(c.id)" class="text-red-500 text-sm">O'chirish</button></td>
-              </tr>
-              <tr v-if="customers.length===0"><td colspan="4" class="text-center py-10 text-gray-400">Mijoz yo'q</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Sotuvlar -->
-      <div v-if="page==='sales'" class="p-6">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6">📈 Sotuvlar Tarixi</h2>
-        <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-          <table class="w-full">
-            <thead class="bg-gray-50 text-gray-600 text-sm">
-              <tr><th class="text-left px-5 py-3">Mahsulot</th><th class="text-left px-5 py-3">Soni</th><th class="text-left px-5 py-3">Jami</th><th class="text-left px-5 py-3">Sana</th></tr>
-            </thead>
-            <tbody>
-              <tr v-for="s in sales.slice().reverse()" :key="s.id" class="border-t hover:bg-gray-50">
-                <td class="px-5 py-3 font-medium">{{s.productName}}</td>
-                <td class="px-5 py-3">{{s.qty}}</td>
-                <td class="px-5 py-3 text-green-600 font-semibold">{{s.total.toLocaleString()}} so'm</td>
-                <td class="px-5 py-3 text-gray-500">{{s.date}}</td>
-              </tr>
-              <tr v-if="sales.length===0"><td colspan="4" class="text-center py-10 text-gray-400">Sotuv yo'q</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
+  <!-- DASHBOARD -->
+  <div id="pg-dash" class="page">
+    <h2 class="pt">📊 Dashboard</h2>
+    <div class="cards" id="d-cards"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div class="tbl" style="padding:20px"><h3 style="font-weight:700;margin-bottom:14px">📉 Kam qoldiq</h3><div id="d-low"></div></div>
+      <div class="tbl" style="padding:20px"><h3 style="font-weight:700;margin-bottom:14px">📋 So'nggi sotuvlar</h3><div id="d-sales"></div></div>
     </div>
   </div>
 
-  <!-- Modal: Mahsulot -->
-  <div v-if="showAddProduct" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-2xl p-6 w-96 shadow-xl">
-      <h3 class="text-lg font-bold mb-4">Yangi Mahsulot</h3>
-      <input v-model="newProduct.name" placeholder="Nomi" class="w-full border rounded-xl px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-rose-400" />
-      <input v-model="newProduct.category" placeholder="Kategoriya" class="w-full border rounded-xl px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-rose-400" />
-      <input v-model.number="newProduct.price" type="number" placeholder="Narxi (so'm)" class="w-full border rounded-xl px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-rose-400" />
-      <input v-model.number="newProduct.stock" type="number" placeholder="Qoldiq (dona)" class="w-full border rounded-xl px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-rose-400" />
-      <div class="flex gap-3">
-        <button @click="addProduct" class="flex-1 bg-rose-600 text-white py-2 rounded-xl">Qo'shish</button>
-        <button @click="showAddProduct=false" class="flex-1 bg-gray-100 py-2 rounded-xl">Bekor</button>
+  <!-- MAHSULOTLAR -->
+  <div id="pg-products" class="page">
+    <div class="ph"><h2 class="pt">📦 Mahsulotlar</h2><button class="btn bp" onclick="openM('mp')">+ Qo'shish</button></div>
+    <div class="tbl">
+      <table><thead><tr><th>#</th><th>Nomi</th><th>Kategoriya</th><th>Narxi</th><th>Qoldiq</th><th>Holati</th><th>Amal</th></tr></thead>
+      <tbody id="ptb"></tbody></table>
+    </div>
+  </div>
+
+  <!-- KASSIR (POS) -->
+  <div id="pg-pos" class="page">
+    <h2 class="pt">🧾 Kassir</h2>
+    <div class="pos-wrap">
+      <div>
+        <div class="fg" style="margin-bottom:14px"><input id="pos-search" placeholder="🔍 Mahsulot qidirish..." oninput="renderPosProducts()"/></div>
+        <div class="prod-grid" id="pos-grid"></div>
+      </div>
+      <div class="cart-box">
+        <h3 style="font-weight:700;margin-bottom:14px;color:#1e293b">🛒 Savat</h3>
+        <div id="cart-items"></div>
+        <div id="cart-total" style="display:none;margin-top:14px;padding-top:14px;border-top:2px solid #e2e8f0">
+          <div style="display:flex;justify-content:space-between;font-size:18px;font-weight:700;margin-bottom:16px">
+            <span>Jami:</span><span style="color:#7c1d29" id="cart-sum">0</span>
+          </div>
+          <div class="fg"><label>Mijoz (ixtiyoriy)</label><select id="pos-customer"><option value="">— Tanlang —</option></select></div>
+          <button class="btn bp" style="width:100%;padding:14px;font-size:16px" onclick="checkout()">✅ To'lov qilish</button>
+        </div>
+        <div id="cart-empty" style="color:#94a3b8;text-align:center;padding:30px">Savat bo'sh</div>
       </div>
     </div>
   </div>
 
-  <!-- Modal: Mijoz -->
-  <div v-if="showAddCustomer" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-2xl p-6 w-96 shadow-xl">
-      <h3 class="text-lg font-bold mb-4">Yangi Mijoz</h3>
-      <input v-model="newCustomer.name" placeholder="Ism Familiya" class="w-full border rounded-xl px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-400" />
-      <input v-model="newCustomer.phone" placeholder="Telefon" class="w-full border rounded-xl px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-400" />
-      <input v-model="newCustomer.address" placeholder="Manzil" class="w-full border rounded-xl px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400" />
-      <div class="flex gap-3">
-        <button @click="addCustomer" class="flex-1 bg-blue-600 text-white py-2 rounded-xl">Qo'shish</button>
-        <button @click="showAddCustomer=false" class="flex-1 bg-gray-100 py-2 rounded-xl">Bekor</button>
-      </div>
+  <!-- MIJOZLAR -->
+  <div id="pg-customers" class="page">
+    <div class="ph"><h2 class="pt">👥 Mijozlar</h2><button class="btn bp" onclick="openM('mc')">+ Qo'shish</button></div>
+    <div class="tbl">
+      <table><thead><tr><th>#</th><th>Ism</th><th>Telefon</th><th>Manzil</th><th>Xaridlar</th><th>Amal</th></tr></thead>
+      <tbody id="ctb"></tbody></table>
     </div>
   </div>
 
-  <!-- Checkout success toast -->
-  <div v-if="toast" class="fixed bottom-6 right-6 bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg z-50 text-sm font-medium">
-    ✅ Sotuv muvaffaqiyatli amalga oshirildi!
+  <!-- SOTUVLAR -->
+  <div id="pg-sales" class="page">
+    <h2 class="pt">📈 Sotuvlar Tarixi</h2>
+    <div class="tbl">
+      <table><thead><tr><th>Sana</th><th>Mahsulotlar</th><th>Jami</th><th>Mijoz</th></tr></thead>
+      <tbody id="stb"></tbody></table>
+    </div>
+  </div>
+
+  <!-- HISOBOT -->
+  <div id="pg-report" class="page">
+    <h2 class="pt">📊 Hisobot</h2>
+    <div class="cards" id="r-cards"></div>
+    <div class="tbl" style="padding:20px">
+      <h3 style="font-weight:700;margin-bottom:14px">Top mahsulotlar</h3>
+      <div id="r-top"></div>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<!-- Modal: Mahsulot -->
+<div class="modal-bg" id="modal-mp">
+  <div class="modal"><h3>📦 Yangi Mahsulot</h3>
+    <div class="fr"><div class="fg"><label>Nomi *</label><input id="m-name" placeholder="Nomi"/></div><div class="fg"><label>Kategoriya</label><input id="m-cat" placeholder="Kategoriya"/></div></div>
+    <div class="fr"><div class="fg"><label>Sotish narxi *</label><input id="m-price" type="number" placeholder="0"/></div><div class="fg"><label>Tannarx</label><input id="m-cost" type="number" placeholder="0"/></div></div>
+    <div class="fr"><div class="fg"><label>Qoldiq</label><input id="m-qty" type="number" placeholder="0"/></div><div class="fg"><label>Min. qoldiq</label><input id="m-min" type="number" placeholder="5"/></div></div>
+    <div class="mf"><button class="btn bp" onclick="addProduct()">Saqlash</button><button class="btn bgray" onclick="closeM('mp')">Bekor</button></div>
+  </div>
+</div>
+
+<!-- Modal: Mijoz -->
+<div class="modal-bg" id="modal-mc">
+  <div class="modal"><h3>👥 Yangi Mijoz</h3>
+    <div class="fr"><div class="fg"><label>Ism *</label><input id="c-name" placeholder="Ism Familiya"/></div><div class="fg"><label>Telefon</label><input id="c-phone" placeholder="+998"/></div></div>
+    <div class="fg"><label>Manzil</label><input id="c-addr" placeholder="Shahar, ko'cha"/></div>
+    <div class="mf"><button class="btn bp" onclick="addCustomer()">Saqlash</button><button class="btn bgray" onclick="closeM('mc')">Bekor</button></div>
   </div>
 </div>
 
 <script>
-const { createApp, ref, computed } = Vue;
-createApp({
-  setup() {
-    const STORAGE = 'shopmax_data';
-    const load = () => JSON.parse(localStorage.getItem(STORAGE) || '{"products":[],"customers":[],"sales":[]}');
-    const save = () => localStorage.setItem(STORAGE, JSON.stringify({ products: products.value, customers: customers.value, sales: sales.value }));
+const STORE='shopmax_v2';
+function load(){return JSON.parse(localStorage.getItem(STORE)||'{"products":[],"customers":[],"sales":[]}');}
+function save(){localStorage.setItem(STORE,JSON.stringify(DB));}
+let DB=load();
+let cart=[];
 
-    const d = load();
-    const products = ref(d.products); const customers = ref(d.customers); const sales = ref(d.sales);
-    const page = ref('dashboard');
-    const cart = ref([]);
-    const toast = ref(false);
-    const menu = [{id:'dashboard',icon:'📊',label:'Dashboard'},{id:'products',icon:'📦',label:'Mahsulotlar'},{id:'pos',icon:'🧾',label:'Kassir'},{id:'customers',icon:'👥',label:'Mijozlar'},{id:'sales',icon:'📈',label:'Sotuvlar'}];
+const PAGES=[{id:'dash',icon:'📊',lbl:'Dashboard'},{id:'products',icon:'📦',lbl:'Mahsulotlar'},{id:'pos',icon:'🧾',lbl:'Kassir'},{id:'customers',icon:'👥',lbl:'Mijozlar'},{id:'sales',icon:'📈',lbl:'Sotuvlar'},{id:'report',icon:'📊',lbl:'Hisobot'}];
+function buildNav(){document.getElementById('snav').innerHTML=PAGES.map(p=>`<button id="nb-${p.id}" onclick="go('${p.id}')">${p.icon} ${p.lbl}</button>`).join('');}
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('#snav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('pg-'+id).classList.add('active');
+  document.getElementById('nb-'+id).classList.add('active');
+  render(id);
+}
+function render(id){
+  if(id==='dash')renderDash();
+  else if(id==='products')renderProducts();
+  else if(id==='pos')renderPos();
+  else if(id==='customers')renderCustomers();
+  else if(id==='sales')renderSales();
+  else if(id==='report')renderReport();
+  updateStats();
+}
+function toast(m,d=2500){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),d);}
+function fmt(n){return Number(n||0).toLocaleString('uz-UZ');}
+function tod(){return new Date().toISOString().slice(0,10);}
 
-    // Products
-    const showAddProduct = ref(false);
-    const newProduct = ref({name:'',category:'',price:0,stock:0});
-    const addProduct = () => { if(!newProduct.value.name) return; products.value.push({...newProduct.value,id:Date.now()}); save(); showAddProduct.value=false; newProduct.value={name:'',category:'',price:0,stock:0}; };
-    const deleteProduct = id => { products.value=products.value.filter(p=>p.id!==id); save(); };
-    const lowStock = computed(() => products.value.filter(p=>p.stock<=5));
+function openM(id){
+  document.getElementById('modal-'+id).classList.add('open');
+  if(id==='pos-cust')document.getElementById('pos-customer').innerHTML='<option value="">— Tanlang —</option>'+DB.customers.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+}
+function closeM(id){document.getElementById('modal-'+id).classList.remove('open');}
+document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
 
-    // Customers
-    const showAddCustomer = ref(false);
-    const newCustomer = ref({name:'',phone:'',address:''});
-    const addCustomer = () => { if(!newCustomer.value.name) return; customers.value.push({...newCustomer.value,id:Date.now()}); save(); showAddCustomer.value=false; newCustomer.value={name:'',phone:'',address:''}; };
-    const deleteCustomer = id => { customers.value=customers.value.filter(c=>c.id!==id); save(); };
+// PRODUCTS
+function addProduct(){
+  const name=document.getElementById('m-name').value.trim();
+  if(!name)return toast('❌ Nomi kiritilmagan!');
+  DB.products.push({id:Date.now(),name,cat:document.getElementById('m-cat').value.trim()||'Umumiy',price:+document.getElementById('m-price').value||0,cost:+document.getElementById('m-cost').value||0,qty:+document.getElementById('m-qty').value||0,min:+document.getElementById('m-min').value||5});
+  save();closeM('mp');renderProducts();renderPosProducts();updateStats();toast('✅ Mahsulot qo\'shildi');
+  ['m-name','m-cat','m-price','m-cost','m-qty','m-min'].forEach(x=>document.getElementById(x).value='');
+}
+function deleteProduct(id){
+  if(!confirm('O\'chirasizmi?'))return;
+  DB.products=DB.products.filter(p=>p.id!==id);
+  save();renderProducts();renderPosProducts();updateStats();toast('🗑️ O\'chirildi');
+}
+function renderProducts(){
+  const tb=document.getElementById('ptb');
+  if(!DB.products.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;padding:30px;color:#94a3b8">Mahsulot yo\'q</td></tr>';return;}
+  tb.innerHTML=DB.products.map((p,i)=>{
+    const st=p.qty<=0?'<span class="badge br">Tugagan</span>':p.qty<=p.min?'<span class="badge by">Kam</span>':'<span class="badge bg">Yetarli</span>';
+    return `<tr><td>${i+1}</td><td><strong>${p.name}</strong></td><td>${p.cat}</td><td>${fmt(p.price)} so'm</td><td><strong>${p.qty}</strong></td><td>${st}</td><td><button class="btn bgray" style="padding:5px 12px;font-size:12px" onclick="deleteProduct(${p.id})">O'chirish</button></td></tr>`;
+  }).join('');
+}
 
-    // POS
-    const addToCart = p => { const ex=cart.value.find(i=>i.id===p.id); if(ex) ex.qty++; else cart.value.push({...p,qty:1}); };
-    const cartTotal = computed(() => cart.value.reduce((s,i)=>s+i.price*i.qty,0));
-    const checkout = () => {
-      cart.value.forEach(item => {
-        const p = products.value.find(x=>x.id===item.id);
-        if(p) p.stock = Math.max(0, p.stock-item.qty);
-        sales.value.push({id:Date.now()+Math.random(),productName:item.name,qty:item.qty,total:item.price*item.qty,date:new Date().toLocaleDateString('uz-UZ')});
-      });
-      cart.value=[]; save();
-      toast.value=true; setTimeout(()=>toast.value=false,2500);
-    };
+// POS
+function renderPos(){
+  renderPosProducts();
+  renderCart();
+  const sel=document.getElementById('pos-customer');
+  sel.innerHTML='<option value="">— Tanlang —</option>'+DB.customers.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+}
+function renderPosProducts(){
+  const q=(document.getElementById('pos-search')?.value||'').toLowerCase();
+  const prods=DB.products.filter(p=>p.qty>0&&(!q||p.name.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q)));
+  const g=document.getElementById('pos-grid');
+  g.innerHTML=prods.map(p=>`<button class="prod-btn" onclick="addToCart(${p.id})"><div class="pn">${p.name}</div><div class="pp">${fmt(p.price)} so'm</div><div class="ps">Qoldiq: ${p.qty}</div></button>`).join('')
+    ||(DB.products.length?'<p style="color:#94a3b8;padding:20px">Mahsulot topilmadi</p>':'<p style="color:#94a3b8;padding:20px">Avval mahsulot qo\'shing</p>');
+}
+function addToCart(id){
+  const p=DB.products.find(x=>x.id===id);if(!p)return;
+  const ex=cart.find(i=>i.id===id);
+  if(ex){if(ex.qty>=p.qty)return toast('❌ Omborda shuncha mahsulot yo\'q!');ex.qty++;}
+  else cart.push({id:p.id,name:p.name,price:p.price,qty:1});
+  renderCart();
+}
+function renderCart(){
+  const el=document.getElementById('cart-items');
+  const empty=document.getElementById('cart-empty');
+  const total=document.getElementById('cart-total');
+  if(!cart.length){el.innerHTML='';empty.style.display='block';total.style.display='none';return;}
+  empty.style.display='none';total.style.display='block';
+  el.innerHTML=cart.map((item,i)=>`<div class="cart-item">
+    <div><div class="ci-name">${item.name}</div><div class="ci-price">${fmt(item.price*item.qty)} so'm</div></div>
+    <div class="qty-ctrl">
+      <button onclick="changeQty(${i},-1)">−</button>
+      <span>${item.qty}</span>
+      <button onclick="changeQty(${i},1)">+</button>
+    </div>
+  </div>`).join('');
+  const sum=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  document.getElementById('cart-sum').textContent=fmt(sum)+' so\'m';
+}
+function changeQty(idx,delta){
+  const item=cart[idx];if(!item)return;
+  const p=DB.products.find(x=>x.id===item.id);
+  if(delta>0&&p&&item.qty>=p.qty)return toast('❌ Yetarli emas!');
+  item.qty+=delta;
+  if(item.qty<=0)cart.splice(idx,1);
+  renderCart();
+}
+function checkout(){
+  if(!cart.length)return;
+  const cid=document.getElementById('pos-customer').value;
+  const cname=cid?DB.customers.find(c=>c.id==cid)?.name:'Noma\'lum';
+  const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  // Update stock
+  cart.forEach(item=>{const p=DB.products.find(x=>x.id===item.id);if(p)p.qty=Math.max(0,p.qty-item.qty);});
+  DB.sales.push({id:Date.now(),date:tod(),items:cart.map(i=>({...i})),total,customer:cname,cid:cid||null});
+  if(cid){const c=DB.customers.find(x=>x.id==cid);if(c){c.purchases=(c.purchases||0)+1;c.totalSpent=(c.totalSpent||0)+total;}}
+  save();
+  cart=[];
+  renderCart();
+  renderPosProducts();
+  updateStats();
+  toast('✅ Sotuv amalga oshirildi! '+fmt(total)+' so\'m',3000);
+}
 
-    const totalRevenue = computed(() => sales.value.reduce((s,x)=>s+x.total,0));
-    const todaySales = computed(() => {
-      const today = new Date().toLocaleDateString('uz-UZ');
-      return sales.value.filter(s=>s.date===today).reduce((s,x)=>s+x.total,0);
-    });
+// CUSTOMERS
+function addCustomer(){
+  const name=document.getElementById('c-name').value.trim();
+  if(!name)return toast('❌ Ism kiritilmagan!');
+  DB.customers.push({id:Date.now(),name,phone:document.getElementById('c-phone').value.trim(),addr:document.getElementById('c-addr').value.trim(),purchases:0,totalSpent:0});
+  save();closeM('mc');renderCustomers();updateStats();toast('✅ Mijoz qo\'shildi');
+  ['c-name','c-phone','c-addr'].forEach(x=>document.getElementById(x).value='');
+}
+function deleteCustomer(id){if(!confirm('O\'chirasizmi?'))return;DB.customers=DB.customers.filter(c=>c.id!==id);save();renderCustomers();toast('🗑️ O\'chirildi');}
+function renderCustomers(){
+  const tb=document.getElementById('ctb');
+  if(!DB.customers.length){tb.innerHTML='<tr><td colspan="6" style="text-align:center;padding:30px;color:#94a3b8">Mijoz yo\'q</td></tr>';return;}
+  tb.innerHTML=DB.customers.map((c,i)=>`<tr><td>${i+1}</td><td><strong>${c.name}</strong></td><td>${c.phone||'—'}</td><td>${c.addr||'—'}</td><td>${c.purchases||0} marta · ${fmt(c.totalSpent||0)} so'm</td><td><button class="btn bgray" style="padding:5px 12px;font-size:12px" onclick="deleteCustomer(${c.id})">O'chirish</button></td></tr>`).join('');
+}
 
-    return { page,menu,products,customers,sales,cart,toast,showAddProduct,newProduct,addProduct,deleteProduct,lowStock,showAddCustomer,newCustomer,addCustomer,deleteCustomer,addToCart,cartTotal,checkout,totalRevenue,todaySales };
-  }
-}).mount('#app');
+// SALES
+function renderSales(){
+  const tb=document.getElementById('stb');
+  if(!DB.sales.length){tb.innerHTML='<tr><td colspan="4" style="text-align:center;padding:30px;color:#94a3b8">Sotuv yo\'q</td></tr>';return;}
+  tb.innerHTML=[...DB.sales].reverse().map(s=>`<tr><td>${s.date}</td><td style="font-size:13px">${s.items.map(i=>`${i.name}×${i.qty}`).join(', ')}</td><td style="font-weight:700;color:#7c1d29">${fmt(s.total)} so'm</td><td>${s.customer||'—'}</td></tr>`).join('');
+}
+
+// DASHBOARD
+function renderDash(){
+  const rev=DB.sales.reduce((s,x)=>s+x.total,0);
+  const today=tod();const todaySales=DB.sales.filter(s=>s.date===today).reduce((s,x)=>s+x.total,0);
+  const low=DB.products.filter(p=>p.qty<=p.min);
+  document.getElementById('d-cards').innerHTML=`
+    <div class="card"><div class="v">${DB.products.length}</div><div class="l">Mahsulotlar</div></div>
+    <div class="card g"><div class="v">${DB.sales.length}</div><div class="l">Jami sotuvlar</div></div>
+    <div class="card p"><div class="v">${fmt(todaySales)}</div><div class="l">Bugungi daromad</div></div>
+    <div class="card o"><div class="v">${fmt(rev)}</div><div class="l">Jami daromad</div></div>
+    <div class="card r"><div class="v">${low.length}</div><div class="l">Kam qoldiq</div></div>
+  `;
+  document.getElementById('d-low').innerHTML=low.length?low.map(p=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f1f5f9"><span>${p.name}</span><span class="badge by">${p.qty} dona</span></div>`).join(''):'<p style="color:#94a3b8;padding:10px">Hammasi yetarli 👍</p>';
+  document.getElementById('d-sales').innerHTML=[...DB.sales].reverse().slice(0,5).map(s=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px"><span>${s.date}</span><span style="color:#7c1d29;font-weight:700">${fmt(s.total)} so'm</span></div>`).join('')||'<p style="color:#94a3b8;padding:10px">Sotuv yo\'q</p>';
+}
+
+// REPORT
+function renderReport(){
+  const rev=DB.sales.reduce((s,x)=>s+x.total,0);
+  const cost=DB.sales.reduce((s,x)=>s+x.items.reduce((ss,i)=>{const p=DB.products.find(x=>x.id===i.id);return ss+(p?p.cost*i.qty:0);},0),0);
+  document.getElementById('r-cards').innerHTML=`
+    <div class="card g"><div class="v">${fmt(rev)}</div><div class="l">Jami daromad</div></div>
+    <div class="card p"><div class="v">${fmt(rev-cost)}</div><div class="l">Foyda</div></div>
+    <div class="card"><div class="v">${DB.sales.length}</div><div class="l">Sotuvlar</div></div>
+    <div class="card o"><div class="v">${DB.customers.length}</div><div class="l">Mijozlar</div></div>
+  `;
+  // top products
+  const sold={};
+  DB.sales.forEach(s=>s.items.forEach(i=>{sold[i.name]=(sold[i.name]||0)+i.qty;}));
+  const top=Object.entries(sold).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  document.getElementById('r-top').innerHTML=top.length?top.map(([name,qty],i)=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f1f5f9"><span><strong>#${i+1}</strong> ${name}</span><span class="badge bg">${qty} dona</span></div>`).join(''):'<p style="color:#94a3b8;padding:20px;text-align:center">Ma\'lumot yo\'q</p>';
+}
+
+function updateStats(){
+  const todaySales=DB.sales.filter(s=>s.date===tod()).reduce((s,x)=>s+x.total,0);
+  document.getElementById('sstat').innerHTML=`Mahsulotlar: <strong>${DB.products.length}</strong><br>Bugungi: <strong>${fmt(todaySales)} so'm</strong><br>Mijozlar: <strong>${DB.customers.length}</strong>`;
+}
+
+buildNav();go('dash');
 </script>
 </body>
 </html>
